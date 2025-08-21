@@ -127,43 +127,43 @@ func downloadFile(finalURL, outputDir string) bool {
 	filePath := filepath.Join(outputDir, filename)       // Build full path
 
 	if fileExists(filePath) { // Skip if file already exists
-		log.Printf("File already exists, skipping: %s", filePath)
+		log.Printf("File already exists, skipping '%s'", filePath)
 		return false
 	}
 
 	client := &http.Client{Timeout: 1 * time.Minute} // HTTP client with timeout
 	resp, err := client.Get(finalURL)                // Send GET request
 	if err != nil {
-		log.Printf("Failed to download %s: %v", finalURL, err) // Log error
+		log.Printf("Failed to download '%s' '%v'", finalURL, err) // Log error
 		return false
 	}
 	defer resp.Body.Close() // Ensure response body is closed
 
 	if resp.StatusCode != http.StatusOK { // Ensure HTTP status is OK
-		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
+		log.Printf("Download failed for '%s' '%s'", finalURL, resp.Status)
 		return false
 	}
 
 	var buf bytes.Buffer                     // Buffer to store response
 	written, err := io.Copy(&buf, resp.Body) // Copy response body to buffer
 	if err != nil {
-		log.Printf("Failed to read PDF data from %s: %v", finalURL, err)
+		log.Printf("Failed to read PDF data from '%s' '%v'", finalURL, err)
 		return false
 	}
 	if written == 0 { // Check if empty file
-		log.Printf("Downloaded 0 bytes for %s; not creating file", finalURL)
+		log.Printf("Downloaded 0 bytes for '%s' not creating file", finalURL)
 		return false
 	}
 
 	out, err := os.Create(filePath) // Create file for writing
 	if err != nil {
-		log.Printf("Failed to create file for %s: %v", finalURL, err)
+		log.Printf("Failed to create file for '%s' '%v'", finalURL, err)
 		return false
 	}
 	defer out.Close() // Ensure file is closed
 
 	if _, err := buf.WriteTo(out); err != nil { // Write buffer to file
-		log.Printf("Failed to write PDF to file for %s: %v", finalURL, err)
+		log.Printf("Failed to write PDF to file for '%s' '%v'", finalURL, err)
 		return false
 	}
 
