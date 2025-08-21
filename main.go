@@ -131,7 +131,7 @@ func downloadFile(finalURL, outputDir string) bool {
 		return false
 	}
 
-	client := &http.Client{Timeout: 3 * time.Minute} // HTTP client with timeout
+	client := &http.Client{Timeout: 1 * time.Minute} // HTTP client with timeout
 	resp, err := client.Get(finalURL)                // Send GET request
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err) // Log error
